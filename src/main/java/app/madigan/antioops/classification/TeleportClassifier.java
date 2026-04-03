@@ -1,5 +1,6 @@
 package app.madigan.antioops.classification;
 
+import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -15,6 +16,28 @@ import net.runelite.client.util.Text;
 @Singleton
 public class TeleportClassifier
 {
+	// ---------- POH object IDs (confirmed in-game) ----------
+	// TODO : Fill in missing entries (see ids.md)
+	private static final Map<Integer, String> POH_PORTAL_IDS = Map.ofEntries(
+		Map.entry(13615, "Varrock"),
+		Map.entry(13617, "Falador"),
+		Map.entry(13619, "Ardougne"),
+		Map.entry(29339, "Lunar Isle"),
+		Map.entry(29342, "Waterbirth Island"),
+		Map.entry(37586, "Salve Graveyard"),
+		Map.entry(37588, "West Ardougne"),
+		Map.entry(37591, "Barrows"),
+		Map.entry(50713, "Civitas illa Fortis")
+	);
+
+	private static final int EXIT_PORTAL_ID = 4525;
+	private static final int PORTAL_NEXUS_ID = 33408;
+
+	private static final Set<String> NEXUS_NON_TELEPORT_OPTIONS = Set.of(
+		"configuration",
+		"examine"
+	);
+
 	// ---------- Jewelry item name substrings (case-insensitive match against stripped target) ----------
 	private static final Set<String> JEWELRY_ITEMS = Set.of(
 		"ring of dueling",
@@ -64,7 +87,7 @@ public class TeleportClassifier
 	 *
 	 * @param menuOption the raw menu option string (e.g. "Cast", "Break", "Rub", "Varrock")
 	 * @param menuTarget the raw menu target string — may contain RuneLite color tags
-	 * @param itemId     the item ID from the event (used for future POH object ID verification)
+	 * @param itemId     the ID from the event — item ID for inventory actions, object ID for game objects
 	 * @return a {@link TeleportTarget} if this is an interceptable teleport, or {@code null}
 	 */
 	public TeleportTarget classify(String menuOption, String menuTarget, int itemId)
@@ -103,10 +126,6 @@ public class TeleportClassifier
 		return null;
 	}
 
-	// -------------------------------------------------------------------------
-	// TASK-05: Spellbook teleports
-	// -------------------------------------------------------------------------
-
 	private TeleportTarget classifySpellbook(String menuOption, String menuTarget)
 	{
 		if (!"Cast".equals(menuOption))
@@ -140,10 +159,6 @@ public class TeleportClassifier
 		return lower.contains("teleport") || lower.contains("tele group");
 	}
 
-	// -------------------------------------------------------------------------
-	// TASK-06: Jewelry teleports
-	// -------------------------------------------------------------------------
-
 	private TeleportTarget classifyJewelry(String menuOption, String menuTarget)
 	{
 		String strippedOption = menuOption.trim().toLowerCase();
@@ -169,10 +184,6 @@ public class TeleportClassifier
 		// Both should be intercepted. Everything else (non-teleport options) was already excluded above.
 		return new TeleportTarget(TeleportCategory.JEWELRY, strippedTarget, menuOption);
 	}
-
-	// -------------------------------------------------------------------------
-	// TASK-08: Tablet teleports
-	// -------------------------------------------------------------------------
 
 	private TeleportTarget classifyTablet(String menuOption, String menuTarget)
 	{
@@ -200,54 +211,43 @@ public class TeleportClassifier
 		return new TeleportTarget(TeleportCategory.TABLET, strippedTarget, null);
 	}
 
-	// -------------------------------------------------------------------------
-	// TASK-07: POH portals and exit (STUB — requires in-game verification)
-	// -------------------------------------------------------------------------
-
 	/**
-	 * STUB — POH portal and exit classification requires in-game verification.
+	 * Classifies POH portal, exit portal, and Portal Nexus interactions.
 	 *
-	 * What needs to be verified on a live client:
+	 * <p>Covers 9 confirmed portal destinations, the exit portal, and the Portal Nexus.
+	 * Additional portal IDs can be added to {@code POH_PORTAL_IDS} as they are verified in-game.
 	 *
-	 * 1. POH PORTAL OBJECTS
-	 *    - Object IDs of the portal frames inside a player-owned house.
-	 *      These vary by portal destination and possibly by construction level/style.
-	 *      Walk up to each portal and use the "Examine" option; note the object ID from
-	 *      the "Object ID" developer plugin overlay, or log it from onGameObjectSpawned.
-	 *    - Exact menu option text for entering a portal (e.g. "Enter", the destination name
-	 *      like "Varrock", or "Kharyrll"). Right-click the portal and log event.getMenuOption()
-	 *      and event.getMenuTarget() from onMenuOptionClicked.
-	 *
-	 * 2. POH EXIT PORTAL
-	 *    - Object ID of the exit portal (the large portal near the house entrance/exit).
-	 *    - Exact menu option — likely "Enter" or "Exit" on the exit portal object.
-	 *    - Whether the target string contains any identifiable keyword like "portal" or
-	 *      the house owner's name.
-	 *
-	 * 3. HOTSPOT / LAYOUT DIFFERENCES
-	 *    - Verify whether the object IDs differ between house layouts or room styles.
-	 *    - Verify what happens with a Nexus (the Jewellery Box / Portal Nexus) — it may
-	 *      use different menu actions entirely (e.g. CC_OP widget interaction).
-	 *
-	 * Until these are confirmed, this method always returns null.
+	 * @param itemId for game object interactions, this is the object ID
 	 */
 	private TeleportTarget classifyPoh(String menuOption, String menuTarget, int itemId)
 	{
-		// TODO: Implement once object IDs and menu text are verified in-game.
-		// Log what we see to assist with verification during testing.
-		log.debug("[POH stub] option='{}' target='{}' itemId={}", menuOption, stripTags(menuTarget), itemId);
+		// Exit portal — sends the player out of the POH to wherever they entered from
+		if (itemId == EXIT_PORTAL_ID)
+		{
+			return new TeleportTarget(TeleportCategory.POH_EXIT, "POH Exit Portal", "Previous location");
+		}
+
+		// Known destination portals
+		String destination = POH_PORTAL_IDS.get(itemId);
+		if (destination != null)
+		{
+			return new TeleportTarget(TeleportCategory.POH_PORTAL, destination + " portal", destination);
+		}
+
+		// Portal Nexus — block any teleport interaction, but allow configuration/examine
+		if (itemId == PORTAL_NEXUS_ID)
+		{
+			String optionLower = menuOption.trim().toLowerCase();
+			if (NEXUS_NON_TELEPORT_OPTIONS.contains(optionLower))
+			{
+				return null;
+			}
+			return new TeleportTarget(TeleportCategory.POH_PORTAL, "Portal Nexus", menuOption);
+		}
 
 		return null;
 	}
 
-	// -------------------------------------------------------------------------
-	// Utility
-	// -------------------------------------------------------------------------
-
-	/**
-	 * Strips RuneLite color/formatting tags (e.g. {@code <col=ff9040>}, {@code </col>})
-	 * from a raw menu string. Uses the RuneLite {@link Text} utility for correctness.
-	 */
 	private static String stripTags(String raw)
 	{
 		return Text.removeTags(raw);
