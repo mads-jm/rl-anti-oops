@@ -78,7 +78,7 @@ If everything passes, `event.consume()` eats the click and a chat warning is sho
 
 ### In-game research (highest impact right now)
 
-The plugin needs real game data to complete several features. See [`ids.md`](ids.md) for the full reference and [`verification.md`](verification.md) for what still needs confirming.
+The plugin needs real game data to complete several features. See [`docs/ids.md`](docs/ids.md) for the full reference and [`docs/game-research.md`](docs/game-research.md) for what still needs confirming.
 
 Priority items:
 
@@ -94,7 +94,7 @@ Priority items:
 3. Enable **Developer Tools** in the RuneLite plugin config panel
 4. Open **Developer Tools -> Object Inspector** (or enable the "Object ID" overlay via Settings -> Overlays)
 5. Right-click the object you want to identify — the overlay shows the object ID on hover
-6. Record the ID in `ids.md` alongside the destination name
+6. Record the ID in `docs/ids.md` alongside the destination name
 
 For POH portals specifically:
 - Enter your house in building mode

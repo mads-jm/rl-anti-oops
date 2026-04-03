@@ -43,7 +43,7 @@ The plugin uses the `PVP_AREA_CLIENT` varbit to detect safe zones (0 = safe, 1 =
 
 ## Development
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, architecture, and how to contribute. The highest-impact contributions right now are **recording POH portal object IDs** and **verifying menu interaction patterns** — see [`ids.md`](ids.md) and [`verification.md`](verification.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, architecture, and how to contribute. The highest-impact contributions right now are **recording POH portal object IDs** and **verifying menu interaction patterns** — see [`docs/ids.md`](docs/ids.md) and [`docs/game-research.md`](docs/game-research.md).
 
 ### Roadmap
 
