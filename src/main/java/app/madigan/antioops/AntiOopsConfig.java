@@ -1,0 +1,110 @@
+package app.madigan.antioops;
+
+import net.runelite.client.config.Config;
+import net.runelite.client.config.ConfigGroup;
+import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.ConfigSection;
+import net.runelite.client.config.Range;
+
+@ConfigGroup("antioops")
+public interface AntiOopsConfig extends Config
+{
+	@ConfigSection(
+		name = "Protection Toggles",
+		description = "Which teleport categories to intercept",
+		position = 0
+	)
+	String protectionToggles = "protectionToggles";
+
+	@ConfigSection(
+		name = "Behavior",
+		description = "How the plugin responds to blocked teleports",
+		position = 10
+	)
+	String behavior = "behavior";
+
+	@ConfigItem(
+		keyName = "protectJewelry",
+		name = "Protect Jewelry",
+		description = "Block jewelry teleports (ring of dueling, games necklace, glory, etc.)",
+		position = 1,
+		section = protectionToggles
+	)
+	default boolean protectJewelry()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "protectSpellbook",
+		name = "Protect Spellbook",
+		description = "Block spellbook teleport casts",
+		position = 2,
+		section = protectionToggles
+	)
+	default boolean protectSpellbook()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "protectPoh",
+		name = "Protect POH",
+		description = "Block POH portal and house exit actions",
+		position = 3,
+		section = protectionToggles
+	)
+	default boolean protectPoh()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "protectTablets",
+		name = "Protect Tablets",
+		description = "Block teleport tablet usage",
+		position = 4,
+		section = protectionToggles
+	)
+	default boolean protectTablets()
+	{
+		return true;
+	}
+
+	@Range(min = 1, max = 10)
+	@ConfigItem(
+		keyName = "confirmationTimeoutSeconds",
+		name = "Confirmation Timeout",
+		description = "Seconds to re-click to confirm a blocked teleport",
+		position = 11,
+		section = behavior
+	)
+	default int confirmationTimeoutSeconds()
+	{
+		return 3;
+	}
+
+	@ConfigItem(
+		keyName = "chatWarnings",
+		name = "Chat Warnings",
+		description = "Show warning messages in chat when a teleport is blocked",
+		position = 12,
+		section = behavior
+	)
+	default boolean chatWarnings()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "includeHighRisk",
+		name = "Include High-Risk Worlds",
+		description = "Also protect on high-risk worlds (not just standard PvP worlds)",
+		position = 13,
+		section = behavior
+	)
+	default boolean includeHighRisk()
+	{
+		return true;
+	}
+}
