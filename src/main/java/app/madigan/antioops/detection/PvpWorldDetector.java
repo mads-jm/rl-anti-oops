@@ -1,5 +1,6 @@
 package app.madigan.antioops.detection;
 
+import java.util.EnumSet;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Client;
@@ -21,7 +22,7 @@ public class PvpWorldDetector
 
 	public void updateWorldType()
 	{
-		java.util.EnumSet<WorldType> types = client.getWorldType();
+		EnumSet<WorldType> types = client.getWorldType();
 		pvpWorld = types.contains(WorldType.PVP);
 		highRiskWorld = types.contains(WorldType.HIGH_RISK);
 	}

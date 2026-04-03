@@ -5,7 +5,6 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
 import net.runelite.client.util.Text;
 
 /**
@@ -74,12 +73,9 @@ public class TeleportClassifier
 		"log"
 	);
 
-	private final Client client;
-
 	@Inject
-	public TeleportClassifier(Client client)
+	public TeleportClassifier()
 	{
-		this.client = client;
 	}
 
 	/**
@@ -128,7 +124,7 @@ public class TeleportClassifier
 
 	private TeleportTarget classifySpellbook(String menuOption, String menuTarget)
 	{
-		if (!"Cast".equals(menuOption))
+		if (!"Cast".equalsIgnoreCase(menuOption))
 		{
 			return null;
 		}

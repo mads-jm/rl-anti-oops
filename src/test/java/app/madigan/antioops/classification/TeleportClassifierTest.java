@@ -13,7 +13,7 @@ public class TeleportClassifierTest
 	@Before
 	public void setUp()
 	{
-		classifier = new TeleportClassifier(null);
+		classifier = new TeleportClassifier();
 	}
 
 	// ---- Spellbook ----

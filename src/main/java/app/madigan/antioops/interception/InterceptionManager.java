@@ -35,7 +35,7 @@ public class InterceptionManager
 			return false;
 		}
 
-		long timeoutNanos = config.confirmationTimeoutSeconds() * 1_000_000_000L;
+		long timeoutNanos = 1_000_000_000L * config.confirmationTimeoutSeconds();
 		pending = new PendingConfirmation(actionKey, now + timeoutNanos, currentTick);
 		return true;
 	}
