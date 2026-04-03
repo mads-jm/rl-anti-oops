@@ -71,7 +71,6 @@ public class AntiOopsPlugin extends Plugin
 		else if (state == GameState.LOGIN_SCREEN || state == GameState.HOPPING)
 		{
 			pvpWorldDetector.clear();
-			safeZoneDetector.clear();
 			interceptionManager.clear();
 		}
 	}
