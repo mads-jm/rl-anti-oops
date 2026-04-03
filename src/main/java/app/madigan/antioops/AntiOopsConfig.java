@@ -126,4 +126,28 @@ public interface AntiOopsConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		keyName = "overheadWarning",
+		name = "Overhead Warning",
+		description = "Show bold overhead text when a teleport is blocked",
+		position = 14,
+		section = behavior
+	)
+	default boolean overheadWarning()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "warningMessage",
+		name = "Warning Message",
+		description = "Text shown in overhead warning",
+		position = 15,
+		section = behavior
+	)
+	default String warningMessage()
+	{
+		return "BLOCKED!";
+	}
 }

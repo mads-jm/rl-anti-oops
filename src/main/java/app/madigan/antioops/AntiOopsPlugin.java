@@ -22,6 +22,7 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.ui.overlay.OverlayManager;
 
 @Slf4j
 @PluginDescriptor(
@@ -50,10 +51,17 @@ public class AntiOopsPlugin extends Plugin
 	@Inject
 	private ConfigManager configManager;
 
+	@Inject
+	private OverlayManager overlayManager;
+
+	@Inject
+	private AntiOopsOverlay overlay;
+
 	@Override
 	protected void startUp() throws Exception
 	{
 		log.debug("PvP Anti-Oops started!");
+		overlayManager.add(overlay);
 		if (client.getGameState() == GameState.LOGGED_IN)
 		{
 			pvpWorldDetector.updateWorldType();
@@ -64,6 +72,7 @@ public class AntiOopsPlugin extends Plugin
 	protected void shutDown() throws Exception
 	{
 		log.debug("PvP Anti-Oops stopped!");
+		overlayManager.remove(overlay);
 		interceptionManager.clear();
 	}
 
@@ -150,9 +159,13 @@ public class AntiOopsPlugin extends Plugin
 				client.addChatMessage(
 					ChatMessageType.GAMEMESSAGE,
 					"",
-					"[PvP Anti-Oops] Blocked: " + target.getName()
-						+ ". Click again within " + config.confirmationTimeoutSeconds() + "s to confirm.",
+					"<col=ff0000>[PvP Anti-Oops] Blocked: " + target.getName()
+						+ ". Click again within " + config.confirmationTimeoutSeconds() + "s to confirm.</col>",
 					null);
+			}
+			if (config.overheadWarning())
+			{
+				overlay.trigger();
 			}
 		}
 	}
