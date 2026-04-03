@@ -2,7 +2,7 @@
 
 A RuneLite plugin that prevents you from accidentally leaving a safe zone on a PvP world.
 
-Ironmen use PvP worlds for blighted supplies, typically grinding bosses in safe areas like POH or instances. One autopilot teleport and you're skulled in Lumbridge with your best gear. This plugin adds a click-again-to-confirm gate on any action that would take you from safety into danger.
+Ironmen use PvP worlds for blighted supplies, typically grinding bosses in safe instances. One autopilot teleport and you're skulled in the middle of Edgeville pvp with your best gear. This plugin adds a click-again-to-confirm gate on any action that would take you from safety into danger.
 
 ## How it works
 
