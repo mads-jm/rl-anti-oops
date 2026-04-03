@@ -18,5 +18,8 @@ com/
 META-INF/
 
 ## local
+.claude
+.zed
+TODO.md
 CLAUDE.md
 /notes
