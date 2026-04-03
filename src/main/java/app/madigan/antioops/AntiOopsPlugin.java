@@ -151,7 +151,6 @@ public class AntiOopsPlugin extends Plugin
 					return;
 				}
 				break;
-			case NONE:
 			default:
 				return;
 		}

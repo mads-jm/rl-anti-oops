@@ -6,6 +6,5 @@ public enum TeleportCategory
 	SPELLBOOK,
 	POH_PORTAL,
 	POH_EXIT,
-	TABLET,
-	NONE
+	TABLET
 }
