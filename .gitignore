@@ -1,0 +1,22 @@
+## build output
+.gradle
+build/
+bin/
+
+## IDE
+.idea/
+.project
+.settings/
+.classpath
+nbactions.xml
+nb-configuration.xml
+nbproject/
+
+## reference sources
+net/
+com/
+META-INF/
+
+## local
+CLAUDE.md
+/notes
