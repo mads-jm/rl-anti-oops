@@ -17,11 +17,11 @@ public interface AntiOopsConfig extends Config
 	String protectionToggles = "protectionToggles";
 
 	@ConfigSection(
-		name = "Protected Zones",
-		description = "Custom regions treated as safe for teleport protection",
+		name = "Custom Zones & Exceptions",
+		description = "Custom protected regions and allowed teleports",
 		position = 5
 	)
-	String protectedZones = "protectedZones";
+	String customSection = "customSection";
 
 	@ConfigSection(
 		name = "Behavior",
@@ -83,9 +83,21 @@ public interface AntiOopsConfig extends Config
 		name = "Custom Protected Regions",
 		description = "Region IDs treated as safe. Type ::aoprot in-game to add your current region. HIGHLY recommend doing outside of a PVP world :)",
 		position = 6,
-		section = protectedZones
+		section = customSection
 	)
 	default String customProtectedRegions()
+	{
+		return "";
+	}
+
+	@ConfigItem(
+		keyName = "allowedTeleports",
+		name = "Allowed Teleports",
+		description = "Teleports that skip confirmation. Type ::aoallow after a blocked teleport to toggle.",
+		position = 7,
+		section = customSection
+	)
+	default String allowedTeleports()
 	{
 		return "";
 	}

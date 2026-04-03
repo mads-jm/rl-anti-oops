@@ -8,6 +8,8 @@ import app.madigan.antioops.detection.SafeZoneDetector;
 import app.madigan.antioops.interception.InterceptionManager;
 import com.google.inject.Provides;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +52,8 @@ public class AntiOopsPlugin extends Plugin
 
 	@Inject
 	private ConfigManager configManager;
+
+	private String lastBlockedActionKey;
 
 	@Inject
 	private OverlayManager overlayManager;
@@ -151,8 +155,15 @@ public class AntiOopsPlugin extends Plugin
 		String actionKey = InterceptionManager.buildActionKey(
 			event.getMenuOption(), event.getMenuTarget());
 
+		// 6. Skip if this teleport is on the allowed list
+		if (isAllowedTeleport(actionKey))
+		{
+			return;
+		}
+
 		if (interceptionManager.shouldBlock(actionKey))
 		{
+			lastBlockedActionKey = actionKey;
 			event.consume();
 			if (config.chatWarnings())
 			{
@@ -160,7 +171,8 @@ public class AntiOopsPlugin extends Plugin
 					ChatMessageType.GAMEMESSAGE,
 					"",
 					"<col=ff0000>[PvP Anti-Oops] Blocked: " + target.getName()
-						+ ". Click again within " + config.confirmationTimeoutSeconds() + "s to confirm.</col>",
+						+ ". Click again within " + config.confirmationTimeoutSeconds()
+						+ "s to confirm. Type ::aoallow to whitelist.</col>",
 					null);
 			}
 			if (config.overheadWarning())
@@ -173,6 +185,12 @@ public class AntiOopsPlugin extends Plugin
 	@Subscribe
 	public void onCommandExecuted(CommandExecuted event)
 	{
+		if ("aoallow".equals(event.getCommand()))
+		{
+			handleAoallow();
+			return;
+		}
+
 		if (!"aoprot".equals(event.getCommand()))
 		{
 			return;
@@ -217,6 +235,55 @@ public class AntiOopsPlugin extends Plugin
 		String updated = String.join(",", regionSet);
 		configManager.setConfiguration("antioops", "customProtectedRegions", updated);
 		chat("[PvP Anti-Oops] Added region to protected list: " + formatRegions(regions));
+	}
+
+	private void handleAoallow()
+	{
+		if (lastBlockedActionKey == null)
+		{
+			chat("[PvP Anti-Oops] No recently blocked teleport to allow.");
+			return;
+		}
+
+		Set<String> allowed = getAllowedTeleports();
+		String key = lastBlockedActionKey;
+
+		if (allowed.remove(key))
+		{
+			String updated = String.join(";", allowed);
+			configManager.setConfiguration("antioops", "allowedTeleports", updated);
+			chat("[PvP Anti-Oops] Removed from allowed list: " + key);
+		}
+		else
+		{
+			allowed.add(key);
+			String updated = String.join(";", allowed);
+			configManager.setConfiguration("antioops", "allowedTeleports", updated);
+			chat("[PvP Anti-Oops] Added to allowed list: " + key);
+		}
+	}
+
+	private boolean isAllowedTeleport(String actionKey)
+	{
+		return getAllowedTeleports().contains(actionKey);
+	}
+
+	private Set<String> getAllowedTeleports()
+	{
+		String raw = config.allowedTeleports().trim();
+		Set<String> set = new LinkedHashSet<>();
+		if (!raw.isEmpty())
+		{
+			for (String entry : raw.split(";"))
+			{
+				String trimmed = entry.trim();
+				if (!trimmed.isEmpty())
+				{
+					set.add(trimmed);
+				}
+			}
+		}
+		return set;
 	}
 
 	private void chat(String message)
