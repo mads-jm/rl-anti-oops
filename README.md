@@ -1,3 +1,5 @@
+<img width="48" height="55" alt="antioops" src="https://github.com/user-attachments/assets/430237c4-c404-417f-930e-f634e0286f7d" />
+
 # PvP Anti-Oops
 
 A RuneLite plugin that prevents you from accidentally leaving a safe zone on a PvP world.
