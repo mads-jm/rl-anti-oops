@@ -5,10 +5,12 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.WorldView;
 import net.runelite.api.gameval.VarbitID;
 
+@Slf4j
 @Singleton
 public class SafeZoneDetector
 {
@@ -77,8 +79,9 @@ public class SafeZoneDetector
 				{
 					regions.add(Integer.parseInt(s.trim()));
 				}
-				catch (NumberFormatException ignored)
+				catch (NumberFormatException e)
 				{
+					log.warn("Invalid region ID in customProtectedRegions: '{}'", s.trim());
 				}
 			}
 		}

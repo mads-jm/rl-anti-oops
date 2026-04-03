@@ -162,4 +162,16 @@ public interface AntiOopsConfig extends Config
 	{
 		return "BLOCKED!";
 	}
+
+	@ConfigItem(
+		keyName = "statusOverlay",
+		name = "Status Overlay",
+		description = "Show a small overlay with teleport protection status on PvP worlds",
+		position = 16,
+		section = behavior
+	)
+	default boolean statusOverlay()
+	{
+		return true;
+	}
 }

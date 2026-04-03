@@ -47,7 +47,7 @@ public class InterceptionManager
 
 	public static String buildActionKey(String option, String target)
 	{
-		return option + "|" + Text.removeTags(target);
+		return (option + "|" + Text.removeTags(target)).toLowerCase();
 	}
 
 	private static class PendingConfirmation

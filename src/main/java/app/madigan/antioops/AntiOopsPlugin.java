@@ -61,11 +61,15 @@ public class AntiOopsPlugin extends Plugin
 	@Inject
 	private AntiOopsOverlay overlay;
 
+	@Inject
+	private AntiOopsStatusOverlay statusOverlay;
+
 	@Override
 	protected void startUp() throws Exception
 	{
 		log.debug("PvP Anti-Oops started!");
 		overlayManager.add(overlay);
+		overlayManager.add(statusOverlay);
 		if (client.getGameState() == GameState.LOGGED_IN)
 		{
 			pvpWorldDetector.updateWorldType();
@@ -77,6 +81,7 @@ public class AntiOopsPlugin extends Plugin
 	{
 		log.debug("PvP Anti-Oops stopped!");
 		overlayManager.remove(overlay);
+		overlayManager.remove(statusOverlay);
 		interceptionManager.clear();
 	}
 
@@ -234,7 +239,8 @@ public class AntiOopsPlugin extends Plugin
 
 		String updated = String.join(",", regionSet);
 		configManager.setConfiguration("antioops", "customProtectedRegions", updated);
-		chat("[PvP Anti-Oops] Added region to protected list: " + formatRegions(regions));
+		chat("[PvP Anti-Oops] Added region to protected list: " + formatRegions(regions)
+			+ " (" + regionSet.size() + " total protected regions)");
 	}
 
 	private void handleAoallow()
