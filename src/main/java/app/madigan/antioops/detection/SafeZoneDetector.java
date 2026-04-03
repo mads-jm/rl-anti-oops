@@ -1,5 +1,8 @@
 package app.madigan.antioops.detection;
 
+import app.madigan.antioops.AntiOopsConfig;
+import java.util.HashSet;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Client;
@@ -12,11 +15,13 @@ public class SafeZoneDetector
 	private static final int POH_REGION_ID = 8046;
 
 	private final Client client;
+	private final AntiOopsConfig config;
 
 	@Inject
-	public SafeZoneDetector(Client client)
+	public SafeZoneDetector(Client client, AntiOopsConfig config)
 	{
 		this.client = client;
+		this.config = config;
 	}
 
 	/**
@@ -24,8 +29,8 @@ public class SafeZoneDetector
 	 * teleports should require confirmation.
 	 *
 	 * <p>This includes both game-designated safe zones (varbit = 0) and
-	 * private instances like POH and boss rooms where the player is
-	 * practically safe despite the varbit reading as dangerous.
+	 * private instances like POH and custom user-added regions where the
+	 * player is practically safe despite the varbit reading as dangerous.
 	 */
 	public boolean isInSafeZone()
 	{
@@ -33,9 +38,9 @@ public class SafeZoneDetector
 	}
 
 	/**
-	 * Returns true if the player is in a private instance (POH, boss room)
-	 * that should be treated as safe even though the PvP varbit may read
-	 * as dangerous.
+	 * Returns true if the player is in a private instance (POH, boss room,
+	 * or custom region) that should be treated as safe even though the PvP
+	 * varbit may read as dangerous.
 	 */
 	private boolean isInPrivateInstance()
 	{
@@ -45,14 +50,39 @@ public class SafeZoneDetector
 			return false;
 		}
 
+		Set<Integer> protectedRegions = getProtectedRegions();
+
 		for (int region : wv.getMapRegions())
 		{
-			if (region == POH_REGION_ID)
+			if (protectedRegions.contains(region))
 			{
 				return true;
 			}
 		}
 
 		return false;
+	}
+
+	private Set<Integer> getProtectedRegions()
+	{
+		Set<Integer> regions = new HashSet<>();
+		regions.add(POH_REGION_ID);
+
+		String custom = config.customProtectedRegions().trim();
+		if (!custom.isEmpty())
+		{
+			for (String s : custom.split(","))
+			{
+				try
+				{
+					regions.add(Integer.parseInt(s.trim()));
+				}
+				catch (NumberFormatException ignored)
+				{
+				}
+			}
+		}
+
+		return regions;
 	}
 }

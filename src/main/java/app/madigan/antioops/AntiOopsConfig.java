@@ -17,6 +17,13 @@ public interface AntiOopsConfig extends Config
 	String protectionToggles = "protectionToggles";
 
 	@ConfigSection(
+		name = "Protected Zones",
+		description = "Custom regions treated as safe for teleport protection",
+		position = 5
+	)
+	String protectedZones = "protectedZones";
+
+	@ConfigSection(
 		name = "Behavior",
 		description = "How the plugin responds to blocked teleports",
 		position = 10
@@ -69,6 +76,18 @@ public interface AntiOopsConfig extends Config
 	default boolean protectTablets()
 	{
 		return true;
+	}
+
+	@ConfigItem(
+		keyName = "customProtectedRegions",
+		name = "Custom Protected Regions",
+		description = "Region IDs treated as safe. Type ::aoprot in-game to add your current region. HIGHLY recommend doing outside of a PVP world :)",
+		position = 6,
+		section = protectedZones
+	)
+	default String customProtectedRegions()
+	{
+		return "";
 	}
 
 	@Range(min = 1, max = 10)
