@@ -38,6 +38,7 @@ public class TeleportClassifier
 	);
 
 	// ---------- Jewelry item name substrings (case-insensitive match against stripped target) ----------
+	// Items using standard "Rub" / "Teleport" / destination menu options
 	private static final Set<String> JEWELRY_ITEMS = Set.of(
 		"ring of dueling",
 		"games necklace",
@@ -50,7 +51,44 @@ public class TeleportClassifier
 		"digsite pendant",
 		"burning amulet",
 		"slayer ring",
-		"xeric's talisman"
+		"xeric's talisman",
+		// Standard-option items added for coverage (Rub / Teleport)
+		"ring of the elements",
+		"ring of shadows",
+		"pharaoh's sceptre",
+		"camulet",
+		"ectophial",
+		"chronicle",
+		"amulet of the eye",
+		"pendant of ates",
+		"giantsoul amulet",
+		"cowbell amulet",
+		"explorer's ring",
+		"wilderness sword"
+	);
+
+	// ---------- Charged items with non-standard menu options ----------
+	// Maps item name substring → set of menu options that are teleports for that item.
+	// Matched case-insensitively against stripped target and option.
+	private static final Map<String, Set<String>> CHARGED_ITEM_TELEPORT_OPTIONS = Map.ofEntries(
+		// Unique-option items
+		Map.entry("royal seed pod", Set.of("commune")),
+		Map.entry("enchanted lyre", Set.of("play")),
+		Map.entry("skull sceptre", Set.of("invoke")),
+		Map.entry("kharedst's memoirs", Set.of("reminisce")),
+		Map.entry("quetzal whistle", Set.of("signal")),
+		// Destination-name option items
+		// "teleport crystal" substring covers both standard and eternal variants
+		Map.entry("teleport crystal", Set.of("lletya", "prifddinas")),
+		Map.entry("drakan's medallion", Set.of("ver sinhaza", "darkmeyer", "slepe")),
+		// Achievement diary rewards
+		Map.entry("ardougne cloak", Set.of("monastery teleport", "farm teleport")),
+		Map.entry("desert amulet", Set.of("nardah", "kalphite cave")),
+		Map.entry("rada's blessing", Set.of("kourend woodland", "mount karuulm")),
+		// Consumable teleport items
+		Map.entry("dorgesh-kaan sphere", Set.of("break")),
+		Map.entry("stony basalt", Set.of("troll stronghold entrance", "troll stronghold roof")),
+		Map.entry("icy basalt", Set.of("weiss"))
 	);
 
 	// ---------- Menu options that are never teleport actions on jewelry ----------
@@ -108,6 +146,12 @@ public class TeleportClassifier
 		}
 
 		result = classifyTablet(menuOption, menuTarget);
+		if (result != null)
+		{
+			return result;
+		}
+
+		result = classifyChargedItem(menuOption, menuTarget);
 		if (result != null)
 		{
 			return result;
@@ -205,6 +249,22 @@ public class TeleportClassifier
 		// Redirected house tablets (e.g. "Rimmington teleport", "Watchtower teleport") are intentionally
 		// NOT excluded here — they teleport AWAY from the current location, not to the house interior.
 		return new TeleportTarget(TeleportCategory.TABLET, strippedTarget, null);
+	}
+
+	private TeleportTarget classifyChargedItem(String menuOption, String menuTarget)
+	{
+		String optionLower = menuOption.trim().toLowerCase();
+		String strippedTarget = stripTags(menuTarget).toLowerCase();
+
+		for (Map.Entry<String, Set<String>> entry : CHARGED_ITEM_TELEPORT_OPTIONS.entrySet())
+		{
+			if (strippedTarget.contains(entry.getKey()) && entry.getValue().contains(optionLower))
+			{
+				return new TeleportTarget(TeleportCategory.CHARGED_ITEM, strippedTarget, menuOption);
+			}
+		}
+
+		return null;
 	}
 
 	/**

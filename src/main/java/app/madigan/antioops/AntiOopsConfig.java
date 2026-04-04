@@ -10,6 +10,16 @@ import net.runelite.client.config.Range;
 public interface AntiOopsConfig extends Config
 {
 	@ConfigSection(
+		name = "Early Release — Some teleports may not be caught yet",
+		description = "Not all teleport items have been verified in-game. "
+			+ "If a teleport slips through, type ::aoissue in chat to report it. "
+			+ "Include the item name and menu option so we can add it.",
+		position = -1,
+		closedByDefault = false
+	)
+	String notice = "notice";
+
+	@ConfigSection(
 		name = "Protection Toggles",
 		description = "Which teleport categories to intercept",
 		position = 0
@@ -74,6 +84,18 @@ public interface AntiOopsConfig extends Config
 		section = protectionToggles
 	)
 	default boolean protectTablets()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "protectChargedItems",
+		name = "Protect Charged Items",
+		description = "Block teleports from charged items (lyre, seed pod, sceptres, diary rewards, etc.)",
+		position = 5,
+		section = protectionToggles
+	)
+	default boolean protectChargedItems()
 	{
 		return true;
 	}
@@ -173,5 +195,17 @@ public interface AntiOopsConfig extends Config
 	default boolean statusOverlay()
 	{
 		return true;
+	}
+
+	@ConfigItem(
+		keyName = "statusOverlayPreview",
+		name = "Status Overlay Preview",
+		description = "Also show the status overlay on non-PvP worlds (preview mode)",
+		position = 17,
+		section = behavior
+	)
+	default boolean statusOverlayPreview()
+	{
+		return false;
 	}
 }

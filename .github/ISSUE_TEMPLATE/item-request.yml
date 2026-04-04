@@ -1,0 +1,63 @@
+name: Missing Teleport Item
+description: Report a teleport item that wasn't blocked by the plugin
+title: "[Item] "
+labels: ["item-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! This helps us make the plugin safer for everyone.
+        If you're not sure about some fields, just fill in what you can.
+
+  - type: input
+    id: item-name
+    attributes:
+      label: Item name
+      description: The exact name of the item as it appears in-game
+      placeholder: e.g. "Enchanted lyre(3)", "Desert amulet 4"
+    validations:
+      required: true
+
+  - type: input
+    id: menu-option
+    attributes:
+      label: Menu option you clicked
+      description: The right-click option that triggered the teleport
+      placeholder: e.g. "Rub", "Teleport", "Play", "Invoke"
+    validations:
+      required: true
+
+  - type: input
+    id: destination
+    attributes:
+      label: Where did it teleport you?
+      description: The destination you were sent to
+      placeholder: e.g. "Rellekka", "Barbarian Village"
+
+  - type: dropdown
+    id: location
+    attributes:
+      label: Where were you when you used it?
+      options:
+        - Bank / safe zone (GE, Lumbridge, etc.)
+        - Player-owned house (POH)
+        - Custom protected region (added via ::aoprot)
+        - Other (describe below)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: world-type
+    attributes:
+      label: World type
+      options:
+        - PvP world
+        - High-risk world
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Screenshots, other details, or steps to reproduce
