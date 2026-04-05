@@ -40,6 +40,14 @@ public class AntiOopsStatusOverlay extends OverlayPanel
 			return null;
 		}
 
+		if (config.pvpWorldReminder())
+		{
+			panelComponent.getChildren().add(LineComponent.builder()
+				.left("PvP World")
+				.leftColor(Color.RED)
+				.build());
+		}
+
 		boolean safe = safeZoneDetector.isInSafeZone();
 
 		panelComponent.getChildren().add(LineComponent.builder()
