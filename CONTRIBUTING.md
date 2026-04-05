@@ -196,7 +196,7 @@ This appears in the RuneLite dev client console when running via `./gradlew run`
 | `client.getWorldType()` | Detect PvP / High Risk worlds |
 | `MenuOptionClicked` event | Intercept teleport actions |
 | `event.consume()` | Block an action from executing |
-| `client.addChatMessage()` | Show the "[PvP Anti-Oops] Blocked" warning |
+| `client.addChatMessage()` | Show the "[oops] Blocked" warning |
 | `GameStateChanged` event | Detect login, logout, world hops |
 | `Text.removeTags()` | Strip `<col=...>` tags from menu text |
 | `VarbitID.PVP_AREA_CLIENT` | Safe zone detection varbit |

@@ -183,7 +183,7 @@ public class AntiOopsPlugin extends Plugin
 				client.addChatMessage(
 					ChatMessageType.GAMEMESSAGE,
 					"",
-					"<col=ffaa00>[PvP Anti-Oops]</col> <col=ff0000>Blocked:</col> <col=ffffff>"
+					"<col=ffaa00>[oops]</col> <col=ff0000>Blocked:</col> <col=ffffff>"
 						+ target.getName() + "</col>. Click again within "
 						+ config.confirmationTimeoutSeconds()
 						+ "s to confirm. Type <col=00ff00>::aoallow</col> to whitelist.",
@@ -224,7 +224,7 @@ public class AntiOopsPlugin extends Plugin
 
 		if (!wv.isInstance())
 		{
-			chat("[PvP Anti-Oops] You are not in an instance. Region IDs: "
+			chat("[oops] You are not in an instance. Region IDs: "
 				+ formatRegions(wv.getMapRegions()));
 			return;
 		}
@@ -248,13 +248,13 @@ public class AntiOopsPlugin extends Plugin
 
 		if (!added)
 		{
-			chat("[PvP Anti-Oops] Region already protected: " + formatRegions(regions));
+			chat("[oops] Region already protected: " + formatRegions(regions));
 			return;
 		}
 
 		String updated = String.join(",", regionSet);
 		configManager.setConfiguration("antioops", "customProtectedRegions", updated);
-		chat("[PvP Anti-Oops] Added region to protected list: " + formatRegions(regions)
+		chat("[oops] Added region to protected list: " + formatRegions(regions)
 			+ " (" + regionSet.size() + " total protected regions)");
 	}
 
@@ -262,7 +262,7 @@ public class AntiOopsPlugin extends Plugin
 	{
 		if (lastBlockedActionKey == null)
 		{
-			chat("<col=ffaa00>[PvP Anti-Oops]</col> No recently blocked teleport. Block a teleport first, then type ::aoallow.");
+			chat("<col=ffaa00>[oops]</col> No recently blocked teleport. Block a teleport first, then type ::aoallow.");
 			return;
 		}
 
@@ -274,7 +274,7 @@ public class AntiOopsPlugin extends Plugin
 		{
 			String updated = String.join(";", allowed);
 			configManager.setConfiguration("antioops", "allowedTeleports", updated);
-			chat("<col=ffaa00>[PvP Anti-Oops]</col> <col=ff0000>Removed</col> from allowed list: <col=ffffff>"
+			chat("<col=ffaa00>[oops]</col> <col=ff0000>Removed</col> from allowed list: <col=ffffff>"
 				+ displayName + "</col>. This teleport will be blocked again.");
 		}
 		else
@@ -282,7 +282,7 @@ public class AntiOopsPlugin extends Plugin
 			allowed.add(key);
 			String updated = String.join(";", allowed);
 			configManager.setConfiguration("antioops", "allowedTeleports", updated);
-			chat("<col=ffaa00>[PvP Anti-Oops]</col> <col=00ff00>Allowed</col>: <col=ffffff>"
+			chat("<col=ffaa00>[oops]</col> <col=00ff00>Allowed</col>: <col=ffffff>"
 				+ displayName + "</col>. This teleport will no longer be blocked. Type ::aoallow to undo.");
 		}
 	}

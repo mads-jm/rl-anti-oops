@@ -35,8 +35,8 @@ All settings are in the RuneLite config panel under "PvP Anti-Oops":
 | Protect Spellbook | On | Block spellbook casts |
 | Protect POH | On | Block POH portal/exit actions |
 | Protect Tablets | On | Block teleport tablet usage |
-| Confirmation Timeout | 3s | Window to re-click and confirm (1-10s) |
-| Chat Warnings | On | Show "[PvP Anti-Oops] Blocked: ..." messages |
+| Confirmation Timeout | 2s | Window to re-click and confirm (1-10s) |
+| Chat Warnings | On | Show "[oops] Blocked: ..." messages |
 | Include High-Risk | On | Also protect on High Risk worlds |
 
 ## Safe zone detection

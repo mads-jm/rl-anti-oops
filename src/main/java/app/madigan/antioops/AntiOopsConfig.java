@@ -12,12 +12,23 @@ public interface AntiOopsConfig extends Config
 	@ConfigItem(
 		keyName = "notice",
 		name = "Notice",
-		description = "Type ::aoissue in-game to report a missed teleport",
-		position = -1
+		description = "",
+		position = -2
 	)
 	default String notice()
 	{
-		return "Menu Entry Swapper 1-click teleports bypass protection. Use default menu options for full safety. ::aoissue to report bugs.";
+		return "Menu Entry Swapper 1-click teleports bypass protection. Use default menu options for full safety.";
+	}
+
+	@ConfigItem(
+		keyName = "commands",
+		name = "Commands",
+		description = "",
+		position = -1
+	)
+	default String commands()
+	{
+		return "::aoprot — protect current instance | ::aoallow — whitelist a teleport | ::aoissue — report a bug";
 	}
 
 	@ConfigSection(
@@ -40,6 +51,13 @@ public interface AntiOopsConfig extends Config
 		position = 10
 	)
 	String behavior = "behavior";
+
+	@ConfigSection(
+		name = "Status Overlay",
+		description = "Overlay shown on PvP worlds",
+		position = 20
+	)
+	String statusOverlaySection = "statusOverlaySection";
 
 	@ConfigItem(
 		keyName = "protectJewelry",
@@ -188,10 +206,10 @@ public interface AntiOopsConfig extends Config
 
 	@ConfigItem(
 		keyName = "statusOverlay",
-		name = "Status Overlay",
+		name = "Enable",
 		description = "Show a small overlay with teleport protection status on PvP worlds",
-		position = 16,
-		section = behavior
+		position = 21,
+		section = statusOverlaySection
 	)
 	default boolean statusOverlay()
 	{
@@ -202,8 +220,8 @@ public interface AntiOopsConfig extends Config
 		keyName = "pvpWorldReminder",
 		name = "PvP World Reminder",
 		description = "Show a persistent PvP world warning in the status overlay",
-		position = 17,
-		section = behavior
+		position = 22,
+		section = statusOverlaySection
 	)
 	default boolean pvpWorldReminder()
 	{
