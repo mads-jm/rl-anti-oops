@@ -135,7 +135,7 @@ public interface AntiOopsConfig extends Config
 	)
 	default int confirmationTimeoutSeconds()
 	{
-		return 3;
+		return 2;
 	}
 
 	@ConfigItem(
