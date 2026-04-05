@@ -123,6 +123,7 @@ These are deliberate exclusions, not bugs:
 | **Destination-aware filtering** | One extra click is cheap; false negatives kill. v1 warns on all destinations. | v2: skip warnings for known-safe destinations (Ferox Enclave, etc.) |
 | **Portal Nexus widget interception** | Nexus uses a widget UI, not menu events. Blocking the object interaction is a stopgap. | v2: intercept widget destination selection |
 | **Jewellery Box** | Widget-based interaction, same problem as Nexus. | v2: research + widget interception |
+| **Menu Entry Swapper 1-click teleports** | Swapped left-clicks fire CC_OP with empty target and no item name — the plugin can't identify the item. Players who configure 1-click teleports accept the bypass. Disabling the swap restores full protection. | Destination name matching is a likely future approach |
 | **Fairy rings, spirit trees** | Different interaction model, lower risk (players are more aware when using these). | v2+ consideration |
 | **Wilderness obelisks, levers** | Player is already in a dangerous zone. Plugin only protects safe→dangerous transitions. | Out of scope |
 | **Sound alerts** | Minimal viable product — chat + overhead warning covers awareness. | v2: configurable sound cue |
