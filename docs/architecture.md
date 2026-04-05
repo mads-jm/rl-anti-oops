@@ -39,7 +39,7 @@ RuneLite plugins can't inject native-feeling game dialogs. The alternatives were
 1. **Custom widget overlay** — complex, fragile across game updates, unfamiliar UX
 2. **Chat message + re-click** — zero UI complexity, familiar OSRS pattern ("click again to confirm"), works with all teleport types uniformly
 
-The re-click approach is also the cheapest possible confirmation. One extra click when you're about to make a mistake costs almost nothing. Dying with gear costs a lot.
+The re-click approach is also the cheapest possible confirmation. One extra click when you're about to make a mistake costs almost nothing. Dying with all of your moons gear costs a lot.
 
 **Single pending confirmation.** Only one teleport can be "pending" at a time. If you click a different teleport before confirming, the first pending is silently discarded and the new teleport becomes pending. This avoids race conditions with multiple confirmation slots and keeps the state machine trivial. The trade-off (rapid clicking of different teleports feels slightly janky) is acceptable — players should be reading the warning, not speed-clicking through it.
 
