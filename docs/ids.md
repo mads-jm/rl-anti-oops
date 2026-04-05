@@ -98,6 +98,83 @@ Destinations: Xeric's Lookout, Xeric's Glade, Xeric's Inferno, Xeric's Heart, Xe
 
 ---
 
+## Additional Covered Items — JEWELRY category (name-substring via `JEWELRY_ITEMS`)
+
+Items matched by name-substring in the menu target. Use standard "Rub" / "Teleport" menu options. IDs are for reference only — the classifier matches by name, not ID.
+
+| Item | Menu Option | Destinations | Item IDs | Charges |
+|------|------------|--------------|----------|---------|
+| Ring of the elements | Rub | Air Altar, Water Altar, Earth Altar, Fire Altar | 26818 (uncharged), 26820 (charged) | Rechargeable |
+| Ring of shadows | Teleport | Ancient Vault, Ghorrock Dungeon, The Scar, Lassar Undercity, Stranglewood | 28673 (uncharged), 28675 (charged) | Rechargeable |
+| Pharaoh's sceptre | Teleport | Jalsavrah, Jaleustrophos, Jaldraocht, Jaltevas | 9044-9050 (charged), 9045 (uncharged) | 3-100 (diary-dependent) |
+| Camulet | Teleport | Enakhra's Temple | 9032 | 4 (rechargeable, upgradeable to unlimited) |
+| Ectophial | Teleport | Ectofuntus | 4251 | Unlimited |
+| Chronicle | Teleport | Champions' Guild | 20674 | 1000 (charges via teleport cards) |
+| Amulet of the eye | Teleport | Temple of the Eye | `___` | Unlimited |
+| Pendant of Ates | Rub | The Darkfrost, Twilight Temple, Ralos' Rise, North Aldarin, North of Kastori, Nemus Retreat | `___` | 1000 (rechargeable via frozen tears) |
+| Giantsoul amulet | Rub | Bryophyta's lair, Obor's lair, Royal Titans' lair | 30637 (uncharged), 30638 (charged) | 16000 (rechargeable) |
+| Cowbell amulet | Teleport | Lumbridge cow field | 33103 (uncharged), 33104 (charged) | 1000 (rechargeable) |
+| Explorer's ring | Teleport | Cabbage patch (Falador) | `___` | Tier 3+ diary reward |
+| Wilderness sword | Teleport | Fountain of Rune | `___` | Tier 4 diary reward |
+
+---
+
+## Additional Covered Items — CHARGED_ITEM category (via `CHARGED_ITEM_TELEPORT_OPTIONS`)
+
+Items with non-standard menu options. Matched by item name substring in target + specific menu option. Menu options sourced from wiki — many need in-game verification.
+
+### Unique-option items
+
+| Item | Menu Option | Destinations | Item IDs | Charges |
+|------|------------|--------------|----------|---------|
+| Royal seed pod | Commune | Grand Tree | 19564 | Unlimited |
+| Enchanted lyre | Play | Rellekka, Waterbirth Island, Jatizso, Neitiznot | 3690 (uncharged), 3691(1)-3695(5) | 1-5 (rechargeable) |
+| Skull sceptre | Invoke | Barbarian Village (Stronghold entrance) | 21276 (standard), 21279 (i) | 10-26 (diary-dependent) |
+| Kharedst's memoirs | Reminisce | Hosidius, Piscarilius, Shayzien, Lovakengj, Arceuus | 21756 | 100 (rechargeable) |
+| Quetzal whistle | Signal | Quetzal Transport landing sites | `___` (basic/enhanced/perfected/perfected(i)) | 50 (rechargeable; perfected(i) unlimited) |
+
+### Destination-name option items
+
+| Item | Menu Options (teleport) | Destinations | Item IDs | Charges |
+|------|------------------------|--------------|----------|---------|
+| Teleport crystal | Lletya / Prifddinas | Lletya, Prifddinas | 23776(1)-23779(4), `___`(5) | 1-5 (rechargeable) |
+| Eternal teleport crystal | Lletya / Prifddinas | Lletya, Prifddinas | 23901 | Unlimited |
+| Drakan's medallion | Ver Sinhaza / Darkmeyer / Slepe | Ver Sinhaza, Darkmeyer, Slepe | 22400 | Unlimited |
+
+Note: "teleport crystal" substring covers both standard and eternal variants in the classifier.
+
+### Achievement diary rewards
+
+| Item | Menu Options (teleport) | Destinations | Tiers with Teleport |
+|------|------------------------|--------------|---------------------|
+| Ardougne cloak | Monastery Teleport / Farm Teleport | Ardougne Monastery, Ardougne farm | All tiers (1-4); farm from tier 2+ |
+| Desert amulet | Nardah / Kalphite Cave | Nardah, Kalphite Cave | Tier 2+ for Nardah; tier 4 for Kalphite |
+| Rada's blessing | Kourend Woodland / Mount Karuulm | Kourend Woodland, Mount Karuulm | Tier 3+ |
+
+### Consumable items
+
+| Item | Menu Options (teleport) | Destinations | Notes |
+|------|------------------------|--------------|-------|
+| Dorgesh-kaan sphere | Break | Random location in Dorgesh-Kaan | Consumed on use |
+| Stony basalt | Troll Stronghold entrance / Troll Stronghold roof | Troll Stronghold | Consumed on use; roof requires 73 Agility + Hard Fremennik Diary |
+| Icy basalt | Weiss | Weiss | Consumed on use; requires Making Friends with My Arm |
+
+---
+
+## Intentionally Excluded
+
+| Item | Reason |
+|------|--------|
+| Ring of returning | Teleports TO respawn point — safe. Same logic as "Teleport to House" exclusion. |
+
+---
+
+## Verification Status
+
+Many menu option names for CHARGED_ITEM items are sourced from wiki, not verified in-game. If an item's menu option doesn't match what the wiki says, the classifier will miss it. Use `::aoissue` to report missed teleports.
+
+---
+
 ## POH Object IDs
 
 ### Portal Room — Directed Portals

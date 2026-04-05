@@ -64,7 +64,7 @@ The tick guard ensures at least one game tick passes between blocking and confir
 
 ## Why POH is special
 
-The `PVP_AREA_CLIENT` varbit (0 = safe, 1 = dangerous) is the primary safe zone signal. But **POH reads as dangerous** (varbit = 1) despite being completely safe from PvP.
+The `PVP_AREA_CLIENT` varbit (0 = safe, 1 = dangerous) is the primary safe zone signal. But **POH reads as dangerous** (varbit = 1) despite being 'completely safe' from PvP.
 
 The fix evolved through three iterations:
 
@@ -99,9 +99,10 @@ All item names and menu options are matched case-insensitively after stripping c
 RuneLite config panels don't support "capture current game state" buttons. These chat commands fill that gap:
 
 - **`::aoprot`** — adds the player's current region IDs to the protected regions list. Must be inside an instance (prevents accidentally protecting the entire overworld). Used for boss rooms or other instances the player considers safe.
-- **`::aoallow`** — toggles the most recently blocked teleport action on/off the whitelist. Useful for items like the Giant Pouch amulet where the menu text looks like a teleport but isn't one.
+- **`::aoallow`** — toggles the most recently blocked teleport action on/off the whitelist. Useful for teleports that take you close to safe instances.
+- **`::aoissue`** — opens the GitHub issue template for reporting missed teleport items. Opens via `LinkBrowser.browse()`.
 
-Both store their data as delimited strings in RuneLite config (`customProtectedRegions` as comma-separated IDs, `allowedTeleports` as semicolon-separated `option|target` keys). This persists across sessions via RuneLite's config system.
+`::aoprot` and `::aoallow` store their data as delimited strings in RuneLite config (`customProtectedRegions` as comma-separated IDs, `allowedTeleports` as semicolon-separated `option|target` keys). This persists across sessions via RuneLite's config system.
 
 ---
 
