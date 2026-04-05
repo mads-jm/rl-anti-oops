@@ -17,7 +17,7 @@ public interface AntiOopsConfig extends Config
 	)
 	default String notice()
 	{
-		return "Early release — some teleports may slip through. Type ::aoissue to report.";
+		return "Menu Entry Swapper 1-click teleports bypass protection. Use default menu options for full safety. ::aoissue to report bugs.";
 	}
 
 	@ConfigSection(
@@ -194,6 +194,18 @@ public interface AntiOopsConfig extends Config
 		section = behavior
 	)
 	default boolean statusOverlay()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "pvpWorldReminder",
+		name = "PvP World Reminder",
+		description = "Show a persistent PvP world warning in the status overlay",
+		position = 17,
+		section = behavior
+	)
+	default boolean pvpWorldReminder()
 	{
 		return true;
 	}

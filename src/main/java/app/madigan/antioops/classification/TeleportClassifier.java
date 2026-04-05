@@ -37,8 +37,8 @@ public class TeleportClassifier
 		"examine"
 	);
 
-	// ---------- Jewelry item name substrings (case-insensitive match against stripped target) ----------
-	// Items using standard "Rub" / "Teleport" / destination menu options
+	// ---------- Enchanted jewelry (case-insensitive name-substring match against stripped target) ----------
+	// Permissive matching: any option NOT in NON_TELEPORT_OPTIONS + target contains name → JEWELRY
 	private static final Set<String> JEWELRY_ITEMS = Set.of(
 		"ring of dueling",
 		"games necklace",
@@ -51,8 +51,15 @@ public class TeleportClassifier
 		"digsite pendant",
 		"burning amulet",
 		"slayer ring",
-		"xeric's talisman",
-		// Standard-option items added for coverage (Rub / Teleport)
+		"xeric's talisman"
+	);
+
+	// ---------- Charged / special teleport items (same permissive matching → CHARGED_ITEM) ----------
+	// Quest items, diary rewards, and other non-jewelry teleport items.
+	// NOTE: Menu Entry Swapper 1-click teleports bypass classification — the swapped event
+	// fires as CC_OP with empty target, so there's no item name to match against.
+	// Normal right-click interactions (Rub, Teleport, destination submenus) are caught.
+	private static final Set<String> CHARGED_ITEM_NAMES = Set.of(
 		"ring of the elements",
 		"ring of shadows",
 		"pharaoh's sceptre",
@@ -64,38 +71,35 @@ public class TeleportClassifier
 		"giantsoul amulet",
 		"cowbell amulet",
 		"explorer's ring",
-		"wilderness sword"
+		"wilderness sword",
+		"enchanted lyre",
+		"kharedst's memoirs",
+		"quetzal whistle",
+		"drakan's medallion",
+		"ardougne cloak",
+		"desert amulet",
+		"rada's blessing",
+		// "teleport crystal" substring covers both standard and eternal variants
+		"teleport crystal"
 	);
 
-	// ---------- Charged items with non-standard menu options ----------
-	// Maps item name substring → set of menu options that are teleports for that item.
-	// Matched case-insensitively against stripped target and option.
-	private static final Map<String, Set<String>> CHARGED_ITEM_TELEPORT_OPTIONS = Map.ofEntries(
-		// Unique-option items
+	// ---------- Specific-option items that can't use permissive matching ----------
+	// Single-purpose options with no left-click swapping or destination submenus.
+	private static final Map<String, Set<String>> CHARGED_ITEM_SPECIFIC_OPTIONS = Map.ofEntries(
 		Map.entry("royal seed pod", Set.of("commune")),
-		Map.entry("enchanted lyre", Set.of("play")),
 		Map.entry("skull sceptre", Set.of("invoke")),
-		Map.entry("kharedst's memoirs", Set.of("reminisce")),
-		Map.entry("quetzal whistle", Set.of("signal")),
-		// Destination-name option items
-		// "teleport crystal" substring covers both standard and eternal variants
-		Map.entry("teleport crystal", Set.of("lletya", "prifddinas")),
-		Map.entry("drakan's medallion", Set.of("ver sinhaza", "darkmeyer", "slepe")),
-		// Achievement diary rewards
-		Map.entry("ardougne cloak", Set.of("monastery teleport", "farm teleport")),
-		Map.entry("desert amulet", Set.of("nardah", "kalphite cave")),
-		Map.entry("rada's blessing", Set.of("kourend woodland", "mount karuulm")),
-		// Consumable teleport items
 		Map.entry("dorgesh-kaan sphere", Set.of("break")),
 		Map.entry("stony basalt", Set.of("troll stronghold entrance", "troll stronghold roof")),
 		Map.entry("icy basalt", Set.of("weiss"))
 	);
 
-	// ---------- Menu options that are never teleport actions on jewelry ----------
-	// "check" covers slayer ring + xeric's talisman; "features" covers ring of wealth;
-	// "dismantle"/"uncharge" cover xeric's talisman; "master"/"partner"/"log" cover slayer ring.
+	// ---------- Menu options that are never teleport actions ----------
+	// Shared across jewelry and charged item classification.
+	// "check" covers slayer ring + xeric's talisman + quetzal whistle; "features" covers ring of wealth;
+	// "dismantle"/"uncharge" cover xeric's talisman; "master"/"partner"/"log" cover slayer ring;
+	// "read" covers kharedst's memoirs (lore text, not teleport).
 	// "teleport" is intentionally absent — slayer ring's Teleport option IS a real teleport.
-	private static final Set<String> JEWELRY_NON_TELEPORT_OPTIONS = Set.of(
+	private static final Set<String> NON_TELEPORT_OPTIONS = Set.of(
 		"wear",
 		"remove",
 		"wield",
@@ -108,7 +112,8 @@ public class TeleportClassifier
 		"uncharge",
 		"master",
 		"partner",
-		"log"
+		"log",
+		"read"
 	);
 
 	@Inject
@@ -204,7 +209,7 @@ public class TeleportClassifier
 		String strippedOption = menuOption.trim().toLowerCase();
 
 		// Skip options that are clearly not teleports
-		if (JEWELRY_NON_TELEPORT_OPTIONS.contains(strippedOption))
+		if (NON_TELEPORT_OPTIONS.contains(strippedOption))
 		{
 			return null;
 		}
@@ -256,7 +261,21 @@ public class TeleportClassifier
 		String optionLower = menuOption.trim().toLowerCase();
 		String strippedTarget = stripTags(menuTarget).toLowerCase();
 
-		for (Map.Entry<String, Set<String>> entry : CHARGED_ITEM_TELEPORT_OPTIONS.entrySet())
+		// Permissive matching: any non-excluded option + known item name in target
+		// Handles swapped left-click destinations (Menu Entry Swapper)
+		if (!NON_TELEPORT_OPTIONS.contains(optionLower))
+		{
+			boolean isChargedItem = CHARGED_ITEM_NAMES.stream()
+				.anyMatch(strippedTarget::contains);
+
+			if (isChargedItem)
+			{
+				return new TeleportTarget(TeleportCategory.CHARGED_ITEM, strippedTarget, menuOption);
+			}
+		}
+
+		// Specific-option matching for items with unique single-purpose teleport options
+		for (Map.Entry<String, Set<String>> entry : CHARGED_ITEM_SPECIFIC_OPTIONS.entrySet())
 		{
 			if (strippedTarget.contains(entry.getKey()) && entry.getValue().contains(optionLower))
 			{

@@ -183,9 +183,10 @@ public class AntiOopsPlugin extends Plugin
 				client.addChatMessage(
 					ChatMessageType.GAMEMESSAGE,
 					"",
-					"<col=ff0000>[PvP Anti-Oops] Blocked: " + target.getName()
-						+ ". Click again within " + config.confirmationTimeoutSeconds()
-						+ "s to confirm. Type ::aoallow to whitelist.</col>",
+					"<col=ffaa00>[PvP Anti-Oops]</col> <col=ff0000>Blocked:</col> <col=ffffff>"
+						+ target.getName() + "</col>. Click again within "
+						+ config.confirmationTimeoutSeconds()
+						+ "s to confirm. Type <col=00ff00>::aoallow</col> to whitelist.",
 					null);
 			}
 			if (config.overheadWarning())
@@ -261,26 +262,47 @@ public class AntiOopsPlugin extends Plugin
 	{
 		if (lastBlockedActionKey == null)
 		{
-			chat("[PvP Anti-Oops] No recently blocked teleport to allow.");
+			chat("<col=ffaa00>[PvP Anti-Oops]</col> No recently blocked teleport. Block a teleport first, then type ::aoallow.");
 			return;
 		}
 
 		Set<String> allowed = getAllowedTeleports();
 		String key = lastBlockedActionKey;
+		String displayName = formatActionKey(key);
 
 		if (allowed.remove(key))
 		{
 			String updated = String.join(";", allowed);
 			configManager.setConfiguration("antioops", "allowedTeleports", updated);
-			chat("[PvP Anti-Oops] Removed from allowed list: " + key);
+			chat("<col=ffaa00>[PvP Anti-Oops]</col> <col=ff0000>Removed</col> from allowed list: <col=ffffff>"
+				+ displayName + "</col>. This teleport will be blocked again.");
 		}
 		else
 		{
 			allowed.add(key);
 			String updated = String.join(";", allowed);
 			configManager.setConfiguration("antioops", "allowedTeleports", updated);
-			chat("[PvP Anti-Oops] Added to allowed list: " + key);
+			chat("<col=ffaa00>[PvP Anti-Oops]</col> <col=00ff00>Allowed</col>: <col=ffffff>"
+				+ displayName + "</col>. This teleport will no longer be blocked. Type ::aoallow to undo.");
 		}
+	}
+
+	/**
+	 * Converts an internal action key like "rub|ring of dueling(8)" into
+	 * a readable display string like "Rub — Ring of dueling(8)".
+	 */
+	private static String formatActionKey(String actionKey)
+	{
+		int sep = actionKey.indexOf('|');
+		if (sep < 0)
+		{
+			return actionKey;
+		}
+		String option = actionKey.substring(0, sep);
+		String target = actionKey.substring(sep + 1);
+		// Title-case the option, leave target as-is (already readable)
+		String displayOption = option.isEmpty() ? "" : Character.toUpperCase(option.charAt(0)) + option.substring(1);
+		return displayOption + " \u2014 " + target;
 	}
 
 	private boolean isAllowedTeleport(String actionKey)
