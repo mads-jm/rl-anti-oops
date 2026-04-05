@@ -22,6 +22,7 @@ import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -32,6 +33,8 @@ import net.runelite.client.ui.overlay.OverlayManager;
 )
 public class AntiOopsPlugin extends Plugin
 {
+	private static final String ISSUES_URL = "https://github.com/mads-jm/rl-anti-oops/issues/new?template=item-request.yml";
+
 	@Inject
 	private Client client;
 
@@ -151,6 +154,12 @@ public class AntiOopsPlugin extends Plugin
 					return;
 				}
 				break;
+			case CHARGED_ITEM:
+				if (!config.protectChargedItems())
+				{
+					return;
+				}
+				break;
 			default:
 				return;
 		}
@@ -192,6 +201,12 @@ public class AntiOopsPlugin extends Plugin
 		if ("aoallow".equals(event.getCommand()))
 		{
 			handleAoallow();
+			return;
+		}
+
+		if ("aoissue".equals(event.getCommand()))
+		{
+			LinkBrowser.browse(ISSUES_URL);
 			return;
 		}
 
@@ -281,7 +296,7 @@ public class AntiOopsPlugin extends Plugin
 		{
 			for (String entry : raw.split(";"))
 			{
-				String trimmed = entry.trim();
+				String trimmed = entry.trim().toLowerCase();
 				if (!trimmed.isEmpty())
 				{
 					set.add(trimmed);

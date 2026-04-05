@@ -9,15 +9,16 @@ import net.runelite.client.config.Range;
 @ConfigGroup("antioops")
 public interface AntiOopsConfig extends Config
 {
-	@ConfigSection(
-		name = "Early Release — Some teleports may not be caught yet",
-		description = "Not all teleport items have been verified in-game. "
-			+ "If a teleport slips through, type ::aoissue in chat to report it. "
-			+ "Include the item name and menu option so we can add it.",
-		position = -1,
-		closedByDefault = false
+	@ConfigItem(
+		keyName = "notice",
+		name = "Notice",
+		description = "Type ::aoissue in-game to report a missed teleport",
+		position = -1
 	)
-	String notice = "notice";
+	default String notice()
+	{
+		return "Early release — some teleports may slip through. Type ::aoissue to report.";
+	}
 
 	@ConfigSection(
 		name = "Protection Toggles",
@@ -195,17 +196,5 @@ public interface AntiOopsConfig extends Config
 	default boolean statusOverlay()
 	{
 		return true;
-	}
-
-	@ConfigItem(
-		keyName = "statusOverlayPreview",
-		name = "Status Overlay Preview",
-		description = "Also show the status overlay on non-PvP worlds (preview mode)",
-		position = 17,
-		section = behavior
-	)
-	default boolean statusOverlayPreview()
-	{
-		return false;
 	}
 }
